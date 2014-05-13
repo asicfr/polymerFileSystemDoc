@@ -1,1 +1,64 @@
-Hello World
+<!-- 
+ * Html5 LocalFileSystem polymer webcomponent  
+ *
+ * AOUT 2010 - MAI 2014 | Stephane Labbe
+ * Released under the MIT license
+ * https://github.com/asicfr/polymerFileSystem/blob/master/LICENSE.txt
+ -->
+
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Html5 LocalFileSystem polymer webcomponent</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- bootstrap must be import before platform to avoid TypeError: Object #<Object> has no method 'getAttribute' -->        
+        <script src="jquery.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+
+        <!-- Polymer platform -->
+        <script src="platform.js"></script>
+
+        <!-- Css Bootstrap -->
+        <link href="bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" href="main.css" rel="stylesheet">
+
+        <!-- file system web component -->
+        <link rel="import" href="filesystem.html">
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Html5 files system web component</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <polymer-filesystem></polymer-filesystem>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

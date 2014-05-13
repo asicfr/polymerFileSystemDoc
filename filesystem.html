@@ -1,0 +1,116 @@
+<!-- 
+ * Html5 LocalFileSystem polymer webcomponent  
+ *
+ * AOUT 2010 - MAI 2014 | Stephane Labbe
+ * Released under the MIT license
+ * https://github.com/asicfr/polymerFileSystem/blob/master/LICENSE.txt
+ -->
+
+<link rel="import" href="polymer.html">
+<polymer-element name="polymer-filesystem"  attributes="">
+	<template>
+	    <style>
+	      /* styles for the custom element itself - lowest specificity */
+	      :host { display: block; }
+	    </style>
+
+
+		<template if="{{ systemOk === false }}">
+			<div class="alert alert-danger">
+				Your browser don't support FileSystem api. <a href="https://www.google.com/intl/fr_fr/chrome/browser/">Please, download chrome</a><br/>
+			</div>
+		</template>
+		<template if="{{ systemError !== null }}">
+			<div class="alert alert-danger">
+				Error : {{systemError}}<br/>
+			</div>
+		</template>
+
+		<template if="{{ systemOk === true }}">
+			<button on-click="{{refreshList}}" class="btn btn-success btn-xs btn-block">
+				<span class="glyphicon glyphicon-refresh"></span>
+				Refresh the list
+			</button>
+
+			<span class="btn btn-warning btn-xs btn-block btn-file">
+			    <span class="glyphicon glyphicon-cloud-upload"></span>
+				Upload a new File in the list
+				<input type="file" on-change="{{addSomeFile}}" />
+			</span>
+			<br/>
+
+			<template id="containerlist" if="{{ myfiles.length > 0 }}">
+				<h3 class="titrelist">List of existing files :</h3>
+				<template id="filelist" repeat="{{onefile in myfiles}}">
+					<button on-click="{{removeSomeFile}}" class="btn btn-danger btn-xs">
+						<span class="glyphicon glyphicon-remove"></span> Remove
+					</button>
+					<button on-click="{{openSomeFile}}" class="btn btn-default btn-xs" type="button">
+						<span class="glyphicon glyphicon-eye-open"></span>
+	      				{{onefile.name}}
+	      				<span class="label label-warning">{{onefile.fileSize}} bytes</span>
+	      				<span class="label label-info">Last modified on {{onefile.fileModificationTime}} </span>
+	    			</button>
+	    			<br/>
+				</template>
+			</template>
+			<template id="emptylist" if="{{ myfiles.length < 1 }}">
+				Empty list
+			</template>
+		</template>
+	</template>
+
+	  
+	<script src="filesystemapi.js"></script>  
+	<script>
+		(function() {
+
+			// Start polymer
+			Polymer('polymer-filesystem', {
+				created: function() {
+					console.log("created");
+					// bind function 'callBackRefreshList' and 'callBackFsmChangeState' with 'this' current context
+					this.fsm = new fileSystemManager(this.callBackFsmChangeState.bind(this));
+					this.fsm.setCallBackAfterLoad(this.callBackRefreshList.bind(this));
+					console.log("fin created");
+				},
+				ready: function() {
+					console.log("ready");
+					this.myfiles = [];
+				},
+				refreshList: function(event, detail, sender) {
+					console.log("refreshList");
+					this.fsm.loadFiles();
+				},
+				callBackFsmChangeState: function() {
+					console.log("callBackFsmChangeState");
+					this.systemOk = this.fsm.isInit();
+					this.systemError = this.fsm.getError();
+					if (this.systemOk) {
+						this.fsm.loadFiles();
+					}
+				},
+				callBackRefreshList: function(newList) {
+					console.log("newList size : " + newList.length);
+					this.myfiles = newList;
+				},
+				openSomeFile: function(event, detail, sender) {
+					console.log("openSomeFile");
+					window.open(sender.templateInstance.model.onefile.fileURL)
+				},
+				removeSomeFile: function(event, detail, sender) {
+					console.log("removeSomeFile");
+					// access the current named model instance that in a template repeat
+					var fileName = sender.templateInstance.model.onefile.name;
+					this.fsm.removeFile(fileName);
+				},
+				addSomeFile: function(event, detail, sender) {
+					console.log("addSomeFile");
+					this.fsm.addFile(sender);
+		      	}
+		    });  
+
+	  	})();
+			
+	</script>
+</polymer-element>
